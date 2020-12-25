@@ -10,18 +10,41 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3001",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"]
     }
 })
 
+
+
+console.log("connection code")
 io.on("connection", (socket: Socket) => {
+
     const socketId = socket.id
 
     console.log(`the socket id is ${socketId}`)
 
-    socket.on("name", (data) => {
-        console.log(data)
+    socket.on("update all", (roomId: string) => {
+        console.log(roomId)
+        if (roomId) {
+            // socket.to(roomId).emit("update all", `send to all users in room ${roomId}`)
+            io.to(roomId).emit("update all", `send to all users in room ${roomId}`)
+        } else {
+            socket.broadcast.emit("update all", "send to all users")
+        }
+    })
+
+    console.log("disconnecting code")
+    socket.on("disconnecting", () => {
+        socket.rooms.forEach(roomId => {
+            if (roomId === "testRoom") {
+                io.to(roomId).emit("user left", `user ${socket.id} has left`)
+            }
+        })
+    })
+
+    socket.on("join room", (roomId) => {
+        socket.join(roomId)
     })
 
     socket.on("disconnect", () => {
