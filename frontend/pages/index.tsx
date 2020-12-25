@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import io from 'socket.io-client';
-import { useRef, useEffect, useState, LegacyRef, InputHTMLAttributes, DetailedHTMLProps, ChangeEvent } from "react"
+import { useRef, useEffect, useState, ChangeEvent } from "react"
 
 export default function Home() {
   const inputRef = useRef()
