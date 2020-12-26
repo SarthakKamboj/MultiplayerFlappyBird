@@ -17,12 +17,16 @@ const io = new Server(server, {
 
 
 
-console.log("connection code")
 io.on("connection", (socket: Socket) => {
 
     const socketId = socket.id
 
     console.log(`the socket id is ${socketId}`)
+
+    socket.on("hi", (msg) => {
+        console.log(msg)
+        socket.emit("hi", "hi from server");
+    })
 
     socket.on("update all", (roomId: string) => {
         console.log(roomId)
@@ -34,7 +38,6 @@ io.on("connection", (socket: Socket) => {
         }
     })
 
-    console.log("disconnecting code")
     socket.on("disconnecting", () => {
         socket.rooms.forEach(roomId => {
             if (roomId === "testRoom") {
